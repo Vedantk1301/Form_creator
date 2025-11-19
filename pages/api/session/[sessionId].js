@@ -1,6 +1,6 @@
-import { getSession } from '@/lib/sessionStore';
+const { getSession } = require('../../../lib/sessionStore');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const {
     query: { sessionId },
     method
@@ -16,4 +16,4 @@ export default async function handler(req, res) {
     return res.status(404).json({ error: 'Session not found' });
   }
   res.status(200).json(session);
-}
+};
