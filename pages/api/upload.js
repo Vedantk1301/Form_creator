@@ -1,11 +1,11 @@
-import formidable from 'formidable';
-import { promises as fs } from 'fs';
-import path from 'path';
-import pdfParse from 'pdf-parse';
-import mammoth from 'mammoth';
-import { nanoid } from 'nanoid';
-import { parseDocument } from '@/lib/parser';
-import { saveSession } from '@/lib/sessionStore';
+const formidable = require('formidable');
+const fs = require('fs').promises;
+const path = require('path');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
+const { nanoid } = require('nanoid');
+const { parseDocument } = require('../../lib/parser');
+const { saveSession } = require('../../lib/sessionStore');
 
 export const config = {
   api: {
@@ -44,7 +44,7 @@ async function extractText(file) {
   return buffer.toString('utf8');
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method not allowed' });
@@ -74,4 +74,4 @@ export default async function handler(req, res) {
     console.error(error);
     res.status(400).json({ error: error.message || 'Failed to process document.' });
   }
-}
+};
