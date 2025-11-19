@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pocari Sweat Insight Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <div class="intro-block">
+          <p class="eyebrow">The Pocari Perspective</p>
+          <h1>Guided questionnaire workspace</h1>
+          <p>
+            Drop in the briefing document, let GPT‑5 mini parse every prompt, and
+            walk through one thoughtful bucket at a time. The UI stays calm,
+            legible, and focused so insights flow faster.
+          </p>
+          <div class="doc-flow">
+            <label class="upload-chip">
+              <input type="file" accept=".pdf,.doc,.docx,.txt" />
+              <span>Upload PDF / DOC / TXT</span>
+            </label>
+            <div class="parser-card">
+              <p class="parser-chip">Document parser · GPT‑5 mini</p>
+              <p>
+                The parser cleans messy layouts, extracts every question, and
+                drops them into this form. Nothing is auto-submitted—you stay in
+                control of the final answers.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="status-panel">
+          <div class="status-row">
+            <div>
+              <p class="label">Date</p>
+              <p class="value">14/11/2025</p>
+            </div>
+            <div>
+              <p class="label">Buckets</p>
+              <p class="value">10 sections</p>
+            </div>
+          </div>
+          <div class="status-row">
+            <div>
+              <p class="label">Questions</p>
+              <p class="value">43 prompts</p>
+            </div>
+            <div>
+              <p class="label">Session mode</p>
+              <p class="value">Single-question focus</p>
+            </div>
+          </div>
+          <p class="panel-note">
+            Take notes, paste data, or flag items. Answers autosave locally so
+            you can pause without losing your thinking.
+          </p>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <div class="question-deck" aria-live="polite">
+          <div class="progress-track">
+            <span class="progress-label"></span>
+            <div class="progress-bar">
+              <div class="progress-bar__fill"></div>
+            </div>
+          </div>
+
+          <article class="question-card">
+            <div class="part-meta">
+              <p class="part-title"></p>
+              <p class="part-context"></p>
+            </div>
+            <h2 class="question-text"></h2>
+            <textarea
+              class="response-input"
+              placeholder="Capture insights, numbers, anecdotes or quick notes..."
+              rows="6"
+            ></textarea>
+            <div class="question-footer">
+              <button class="ghost" data-action="bookmark">Bookmark</button>
+              <span class="autosave-state" role="status">Draft saved</span>
+            </div>
+          </article>
+
+          <div class="nav-controls">
+            <button class="ghost" data-action="previous">Previous</button>
+            <button class="primary" data-action="next">Next question</button>
+          </div>
+        </div>
+
+        <aside class="bucket-panel" aria-label="Bucket progress map">
+          <div class="bucket-header">
+            <h3>Bucket navigator</h3>
+            <p>Jump to any section or skim completion stats instantly.</p>
+          </div>
+          <ol class="bucket-list"></ol>
+          <div class="helper-card">
+            <p class="helper-title">Document parsing flow</p>
+            <p>
+              GPT‑5 mini structures each uploaded brief into clean prompts and
+              gently formatted context blocks. Review, refine, and respond—no
+              messy OCR steps or auto-generated answers.
+            </p>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
