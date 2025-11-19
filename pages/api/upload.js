@@ -1,11 +1,19 @@
-import formidable from 'formidable';
-import { promises as fs } from 'fs';
-import path from 'path';
-import pdfParse from 'pdf-parse';
-import mammoth from 'mammoth';
-import { nanoid } from 'nanoid';
-import { parseDocument } from '../../lib/parser';
-import { saveSession } from '../../lib/sessionStore';
+const formidable = require('formidable');
+const fs = require('fs').promises;
+const path = require('path');
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
+const { parseDocument } = require('../../lib/parser');
+const { saveSession } = require('../../lib/sessionStore');
+
+let cachedNanoid;
+async function getNanoid() {
+  if (!cachedNanoid) {
+    const { nanoid } = await import('nanoid');
+    cachedNanoid = nanoid;
+  }
+  return cachedNanoid;
+}
 
 export const config = {
   api: {
@@ -53,6 +61,7 @@ export default async function handler(req, res) {
     const upload = await parseForm(req);
     const text = await extractText(upload);
     const parsed = parseDocument(text);
+    const nanoid = await getNanoid();
     const sessionId = nanoid(10);
     const sessionPayload = {
       meta: {
