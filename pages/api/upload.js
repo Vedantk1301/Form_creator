@@ -1,4 +1,4 @@
-const formidable = require('formidable');
+const { formidable } = require('formidable');
 const fs = require('fs').promises;
 const path = require('path');
 const pdfParse = require('pdf-parse');
@@ -22,6 +22,12 @@ export const config = {
 };
 
 const SUPPORTED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.txt'];
+const MIME_EXTENSION_MAP = {
+  'application/pdf': '.pdf',
+  'application/msword': '.doc',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
+  'text/plain': '.txt'
+};
 
 function parseForm(req) {
   const form = formidable({ multiples: false });
@@ -29,23 +35,27 @@ function parseForm(req) {
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
       const upload = files.file;
-      if (!upload) return reject(new Error('Missing file field.'));
-      resolve(upload);
+      const normalized = Array.isArray(upload) ? upload[0] : upload;
+      if (!normalized) return reject(new Error('Missing file field.'));
+      resolve(normalized);
     });
   });
 }
 
 async function extractText(file) {
-  const ext = path.extname(file.originalFilename || '').toLowerCase();
-  if (!SUPPORTED_EXTENSIONS.includes(ext)) {
+  const filename = file.originalFilename || file.newFilename || '';
+  const mime = (file.mimetype || '').toLowerCase();
+  const inferredExt = path.extname(filename).toLowerCase() || MIME_EXTENSION_MAP[mime] || '';
+
+  if (!SUPPORTED_EXTENSIONS.includes(inferredExt)) {
     throw new Error('Unsupported file type. Please upload PDF, DOC, DOCX, or TXT.');
   }
   const buffer = await fs.readFile(file.filepath);
-  if (ext === '.pdf') {
+  if (inferredExt === '.pdf') {
     const data = await pdfParse(buffer);
     return data.text;
   }
-  if (ext === '.docx' || ext === '.doc') {
+  if (inferredExt === '.docx' || inferredExt === '.doc') {
     const result = await mammoth.extractRawText({ buffer });
     return result.value;
   }
@@ -68,7 +78,7 @@ export default async function handler(req, res) {
         ...parsed.meta,
         sessionId,
         createdAt: new Date().toISOString(),
-        originalFilename: upload.originalFilename
+        originalFilename: upload.originalFilename || upload.newFilename || 'upload'
       },
       parts: parsed.parts
     };
